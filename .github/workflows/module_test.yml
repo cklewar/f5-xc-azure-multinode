@@ -94,6 +94,10 @@ jobs:
           TF_VAR_f5xc_api_p12_file: ${{ secrets.f5xc_api_p12_file }}
           TF_VAR_f5xc_tenant: ${{ secrets.f5xc_tenant }}
           TF_TOKEN_app_terraform_io: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
+          TF_VAR_azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          TF_VAR_azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          TF_VAR_azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          TF_VAR_azure_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         run: terraform plan -no-color
         continue-on-error: false
       - name: Cleanup environment
@@ -149,6 +153,10 @@ jobs:
           TF_VAR_f5xc_api_p12_file: ${{ secrets.f5xc_api_p12_file }}
           TF_VAR_f5xc_tenant: ${{ secrets.f5xc_tenant }}
           TF_TOKEN_app_terraform_io: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
+          TF_VAR_azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          TF_VAR_azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          TF_VAR_azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          TF_VAR_azure_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         run: terraform apply -auto-approve -no-color
         continue-on-error: false
       - name: Cleanup environment
@@ -204,6 +212,10 @@ jobs:
           TF_VAR_f5xc_api_p12_file: ${{ secrets.f5xc_api_p12_file }}
           TF_VAR_f5xc_tenant: ${{ secrets.f5xc_tenant }}
           TF_TOKEN_app_terraform_io: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
+          TF_VAR_azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          TF_VAR_azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          TF_VAR_azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          TF_VAR_azure_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         run: terraform destroy -auto-approve -no-color
         continue-on-error: false
       - name: Cleanup environment
