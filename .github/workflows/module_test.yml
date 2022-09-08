@@ -163,7 +163,11 @@ jobs:
           TF_VAR_azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
           TF_VAR_azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           TF_VAR_azure_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        run: terraform apply -auto-approve -no-color
+        run: |
+          terraform import azurerm_marketplace_agreement.single_nic /subscriptions/e9cbbd48-704d-4dfa-bf62-60edda755a66/providers/Microsoft.MarketplaceOrdering/agreements/volterraedgeservices/offers/volterra-node/plans/volterra-node
+          terraform import azurerm_marketplace_agreement.app_stack /subscriptions/e9cbbd48-704d-4dfa-bf62-60edda755a66/providers/Microsoft.MarketplaceOrdering/agreements/volterraedgeservices/offers/entcloud_voltmesh_voltstack_node/plans/freeplan_entcloud_voltmesh_voltstack_node
+          terraform import azurerm_marketplace_agreement.multi_nic /subscriptions/e9cbbd48-704d-4dfa-bf62-60edda755a66/providers/Microsoft.MarketplaceOrdering/agreements/volterraedgeservices/offers/entcloud_voltmesh_voltstack_node/plans/freeplan_entcloud_voltmesh_voltstack_node_multinic
+          terraform apply -auto-approve -no-color
         continue-on-error: false
       - name: Cleanup environment
         id: cleanup_env
