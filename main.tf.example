@@ -144,7 +144,7 @@ module "azure_multi_node_multi_nic_new_vnet" {
   f5xc_azure_default_ce_os_version    = true
   f5xc_azure_no_worker_nodes          = true
   f5xc_azure_total_worker_nodes       = 0
-  public_ssh_key                      = var.public_ssh_key
+  public_ssh_key                      = file(var.ssh_public_key_file)
 }
 
 module "azure_multi_node_multi_nic_new_vnet_wait_for_online" {
@@ -179,7 +179,7 @@ module "azure_multi_node_multi_nic_new_vnet_wait_for_online" {
   f5xc_azure_default_ce_os_version    = true
   f5xc_azure_no_worker_nodes          = true
   f5xc_azure_total_worker_nodes       = 0
-  public_ssh_key                      = var.public_ssh_key
+  public_ssh_key                      = file(var.ssh_public_key_file)
 }
 
 module "azure_multi_node_single_nic_existing_vnet_wait_for_online" {
@@ -223,7 +223,7 @@ module "azure_multi_node_multi_nic_existing_vnet" {
   f5xc_azure_default_ce_os_version    = true
   f5xc_azure_no_worker_nodes          = true
   f5xc_azure_total_worker_nodes       = 2
-  public_ssh_key                      = var.public_ssh_key
+  public_ssh_key                      = file(var.ssh_public_key_file)
 }
 
 module "azure_multi_node_multi_nic_existing_vnet" {
