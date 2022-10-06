@@ -7,7 +7,7 @@ variable "project_prefix" {
 variable "project_suffix" {
   type        = string
   description = "prefix string put at the end of string"
-  default     = "05"
+  default     = "03"
 }
 
 variable "f5xc_namespace" {
@@ -61,14 +61,20 @@ variable "ssh_public_key_file" {
   type    = string
 }
 
-module "f5xc_azure_marketplace_agreement_single_nic" {
+provider "volterra" {
+  api_p12_file = var.f5xc_api_p12_file
+  url          = var.f5xc_api_url
+  alias        = "default"
+}
+
+/*module "f5xc_azure_marketplace_agreement_single_nic" {
   source                = "./modules/azure/agreement"
   azure_client_id       = var.azure_client_id
   azure_client_secret   = var.azure_client_secret
   azure_tenant_id       = var.azure_tenant_id
   azure_subscription_id = var.azure_subscription_id
   f5xc_azure_ce_gw_type = "single_nic"
-}
+}*/
 
 module "f5xc_azure_marketplace_agreement_multi_nic" {
   source                = "./modules/azure/agreement"
@@ -79,14 +85,14 @@ module "f5xc_azure_marketplace_agreement_multi_nic" {
   f5xc_azure_ce_gw_type = "multi_nic"
 }
 
-module "f5xc_azure_marketplace_agreement_app_stack" {
+/*module "f5xc_azure_marketplace_agreement_app_stack" {
   source                = "./modules/azure/agreement"
   azure_client_id       = var.azure_client_id
   azure_client_secret   = var.azure_client_secret
   azure_tenant_id       = var.azure_tenant_id
   azure_subscription_id = var.azure_subscription_id
   f5xc_azure_ce_gw_type = "app_stack"
-}
+}*/
 
 /*module "azure_multi_node_single_nic_new_vnet" {
   source                         = "./modules/f5xc/site/azure"
@@ -125,9 +131,8 @@ module "azure_multi_node_single_nic_new_vnet_wait_for_online" {
 }*/
 
 module "azure_single_node_multi_nic_new_vnet" {
+  depends_on                     = [module.f5xc_azure_marketplace_agreement_multi_nic]
   source                         = "./modules/f5xc/site/azure"
-  f5xc_api_p12_file              = var.f5xc_api_p12_file
-  f5xc_api_url                   = var.f5xc_api_url
   f5xc_namespace                 = var.f5xc_namespace
   f5xc_tenant                    = var.f5xc_tenant
   f5xc_azure_cred                = var.f5xc_azure_cred
@@ -148,6 +153,9 @@ module "azure_single_node_multi_nic_new_vnet" {
   f5xc_azure_no_worker_nodes          = true
   f5xc_azure_total_worker_nodes       = 0
   public_ssh_key                      = file(var.ssh_public_key_file)
+  providers                           = {
+    volterra = volterra.default
+  }
 }
 
 module "azure_single_node_multi_nic_new_vnet_wait_for_online" {
@@ -162,8 +170,6 @@ module "azure_single_node_multi_nic_new_vnet_wait_for_online" {
 
 /*module "azure_multi_node_single_nic_existing_vnet" {
   source                         = "./modules/f5xc/site/azure"
-  f5xc_api_p12_file              = var.f5xc_api_p12_file
-  f5xc_api_url                   = var.f5xc_api_url
   f5xc_namespace                 = var.f5xc_namespace
   f5xc_tenant                    = var.f5xc_tenant
   f5xc_azure_cred                = var.f5xc_azure_cred
@@ -182,6 +188,9 @@ module "azure_single_node_multi_nic_new_vnet_wait_for_online" {
   f5xc_azure_no_worker_nodes          = true
   f5xc_azure_total_worker_nodes       = 0
   public_ssh_key                      = file(var.ssh_public_key_file)
+  providers = {
+    volterra = volterra.default
+  }
 }
 
 module "azure_multi_node_single_nic_existing_vnet_wait_for_online" {
@@ -196,8 +205,6 @@ module "azure_multi_node_single_nic_existing_vnet_wait_for_online" {
 
 /*module "azure_multi_node_multi_nic_existing_vnet" {
   source                       = "./modules/f5xc/site/azure"
-  f5xc_api_p12_file            = var.f5xc_api_p12_file
-  f5xc_api_url                 = var.f5xc_api_url
   f5xc_namespace               = var.f5xc_namespace
   f5xc_tenant                  = var.f5xc_tenant
   f5xc_azure_cred              = var.f5xc_azure_cred
@@ -226,6 +233,9 @@ module "azure_multi_node_single_nic_existing_vnet_wait_for_online" {
   f5xc_azure_no_worker_nodes          = true
   f5xc_azure_total_worker_nodes       = 2
   public_ssh_key                      = file(var.ssh_public_key_file)
+  providers = {
+    volterra = volterra.default
+  }
 }
 
 module "azure_multi_node_multi_nic_existing_vnet" {
