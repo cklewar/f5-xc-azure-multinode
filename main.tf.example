@@ -7,7 +7,7 @@ variable "project_prefix" {
 variable "project_suffix" {
   type        = string
   description = "prefix string put at the end of string"
-  default     = "01"
+  default     = "02"
 }
 
 variable "f5xc_namespace" {
@@ -210,7 +210,7 @@ module "azure_multi_node_single_nic_existing_vnet_wait_for_online" {
   f5xc_azure_cred              = var.f5xc_azure_cred
   f5xc_azure_region            = var.f5xc_azure_region
   f5xc_azure_site_name         = format("%s-mn-mnic-exists-vnet-%s", var.project_prefix, var.project_suffix)
-  f5xc_azure_vnet_resource_group = format("%s-mn-mnic-exists-vnet-rg-%s", var.project_prefix, var.project_suffix)
+  f5xc_azure_vnet_resource_group      = "vnet_resource_group_A"
   f5xc_azure_ce_gw_type        = "multi_nic"
   f5xc_azure_az_nodes          = {
     node0 : {
@@ -226,7 +226,6 @@ module "azure_multi_node_single_nic_existing_vnet_wait_for_online" {
       f5xc_azure_vnet_outside_subnet_name = "node_2_outside_subnet"
     }
   }
-  f5xc_azure_vnet_resource_group      = "vnet_resource_group_A"
   f5xc_azure_default_blocked_services = false
   f5xc_azure_default_ce_sw_version    = true
   f5xc_azure_default_ce_os_version    = true
