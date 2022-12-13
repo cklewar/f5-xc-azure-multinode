@@ -1,4 +1,4 @@
-name: F5XC Azure VNET module
+name: F5XC Azure VNET Multinode module
 on: workflow_dispatch
 jobs:
   f5-xc-azure-vnet-module-validate:
