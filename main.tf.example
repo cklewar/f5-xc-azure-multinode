@@ -61,6 +61,19 @@ variable "ssh_public_key_file" {
   type    = string
 }
 
+provider "azurerm" {
+  client_id       = var.azure_client_id
+  client_secret   = var.azure_client_secret
+  tenant_id       = var.azure_tenant_id
+  subscription_id = var.azure_subscription_id
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+  }
+  alias = "default"
+}
+
 provider "volterra" {
   api_p12_file = var.f5xc_api_p12_file
   url          = var.f5xc_api_url
@@ -94,155 +107,45 @@ module "f5xc_azure_marketplace_agreement_multi_nic" {
   f5xc_azure_ce_gw_type = "app_stack"
 }*/
 
-/*module "azure_multi_node_single_nic_new_vnet" {
-  source                         = "./modules/f5xc/site/azure"
-  f5xc_api_p12_file              = var.f5xc_api_p12_file
-  f5xc_api_url                   = var.f5xc_api_url
-  f5xc_namespace                 = var.f5xc_namespace
-  f5xc_tenant                    = var.f5xc_tenant
-  f5xc_azure_cred                = var.f5xc_azure_cred
-  f5xc_azure_region              = var.f5xc_azure_region
-  f5xc_azure_site_name           = format("%s-m-node-s-nic-new-vnet-%s", var.project_prefix, var.project_suffix)
-  f5xc_azure_vnet_name           = format("%s-m-node-s-nic-new-vnet-%s", var.project_prefix, var.project_suffix)
-  f5xc_azure_vnet_resource_group = format("%s-m-node-s-nic-new-vnet-rg-%s", var.project_prefix, var.project_suffix)
-  f5xc_azure_vnet_primary_ipv4   = "192.168.168.0/21"
-  f5xc_azure_ce_gw_type          = "single_nic"
-  f5xc_azure_az_nodes            = {
-    node0 : { f5xc_azure_az = "1", f5xc_azure_vnet_local_subnet = "192.168.168.0/24" },
-    node1 : { f5xc_azure_az = "1", f5xc_azure_vnet_local_subnet = "192.168.170.0/24" },
-    node2 : { f5xc_azure_az = "1", f5xc_azure_vnet_local_subnet = "192.168.172.0/24" }
+/*module "azure_resource_group" {
+  source                    = "./modules/azure/resource_group"
+  azure_region              = var.f5xc_azure_region
+  azure_resource_group_name = format("%s-azure-vnet-%s", var.project_prefix, var.project_suffix)
+  providers                 = {
+    azurerm = azurerm.default
   }
-  f5xc_azure_default_blocked_services = false
-  f5xc_azure_default_ce_sw_version    = true
-  f5xc_azure_default_ce_os_version    = true
-  f5xc_azure_no_worker_nodes          = false
-  f5xc_azure_total_worker_nodes       = 2
-  public_ssh_key                      = file(var.ssh_public_key_file)
-}
-
-module "azure_multi_node_single_nic_new_vnet_wait_for_online" {
-  depends_on     = [module.azure_multi_node_single_nic_new_vnet]
-  source         = "./modules/f5xc/status/site"
-  f5xc_api_token = var.f5xc_api_token
-  f5xc_api_url   = var.f5xc_api_url
-  f5xc_namespace = var.f5xc_namespace
-  f5xc_tenant    = var.f5xc_tenant
-  f5xc_site_name = format("%s-m-node-s-nic-new-vnet-%s", var.project_prefix, var.project_suffix)
 }*/
 
-module "azure_single_node_multi_nic_new_vnet" {
-  depends_on                     = [module.f5xc_azure_marketplace_agreement_multi_nic]
-  source                         = "./modules/f5xc/site/azure"
-  f5xc_namespace                 = var.f5xc_namespace
-  f5xc_tenant                    = var.f5xc_tenant
-  f5xc_azure_cred                = var.f5xc_azure_cred
-  f5xc_azure_region              = var.f5xc_azure_region
-  f5xc_azure_site_name           = format("%s-sn-mnic-new-vnet-%s", var.project_prefix, var.project_suffix)
-  f5xc_azure_vnet_resource_group = format("%s-sn-mnic-new-vnet-rg-%s", var.project_prefix, var.project_suffix)
-  f5xc_azure_vnet_primary_ipv4   = "10.64.16.0/22"
-  f5xc_azure_ce_gw_type          = "multi_nic"
-  f5xc_azure_az_nodes            = {
-    node0 : {
-      f5xc_azure_az                  = "1", f5xc_azure_vnet_inside_subnet = "10.64.16.0/24",
-      f5xc_azure_vnet_outside_subnet = "10.64.17.0/24"
-    }
+module "azure_multi_node_single_nic_new_vnet_new_subnets" {
+  depends_on                          = [module.f5xc_azure_marketplace_agreement_multi_nic]
+  source                              = "./modules/f5xc/site/azure"
+  f5xc_api_url                        = var.f5xc_api_url
+  f5xc_api_token                      = var.f5xc_api_token
+  f5xc_namespace                      = var.f5xc_namespace
+  f5xc_tenant                         = var.f5xc_tenant
+  f5xc_azure_cred                     = var.f5xc_azure_cred
+  f5xc_azure_region                   = var.f5xc_azure_region
+  f5xc_azure_site_name                = format("%s-mn-sn-nv-ns-%s", var.project_prefix, var.project_suffix)
+  f5xc_azure_vnet_site_resource_group = format("%s-mn-sn-nv-ns-rg-%s", var.project_prefix, var.project_suffix)
+  f5xc_azure_vnet_primary_ipv4        = "192.168.168.0/21"
+  f5xc_azure_ce_gw_type               = "single_nic"
+  f5xc_azure_az_nodes                 = {
+    node0 : { f5xc_azure_az = "1", f5xc_azure_vnet_local_subnet = "192.168.168.0/24" },
+    node1 : { f5xc_azure_az = "1", f5xc_azure_vnet_local_subnet = "192.168.169.0/24" },
+    node2 : { f5xc_azure_az = "1", f5xc_azure_vnet_local_subnet = "192.168.170.0/24" }
   }
   f5xc_azure_default_blocked_services = false
   f5xc_azure_default_ce_sw_version    = true
   f5xc_azure_default_ce_os_version    = true
   f5xc_azure_no_worker_nodes          = true
-  f5xc_azure_total_worker_nodes       = 0
-  public_ssh_key                      = file(var.ssh_public_key_file)
+  ssh_public_key                      = file(var.ssh_public_key_file)
+  custom_tags                         = var.custom_tags
   providers                           = {
     volterra = volterra.default
+    azurerm  = azurerm.default
   }
 }
 
-module "azure_single_node_multi_nic_new_vnet_wait_for_online" {
-  depends_on     = [module.azure_single_node_multi_nic_new_vnet]
-  source         = "./modules/f5xc/status/site"
-  f5xc_api_token = var.f5xc_api_token
-  f5xc_api_url   = var.f5xc_api_url
-  f5xc_namespace = var.f5xc_namespace
-  f5xc_tenant    = var.f5xc_tenant
-  f5xc_site_name = format("%s-sn-mnic-new-vnet-%s", var.project_prefix, var.project_suffix)
+output "azure_multi_node_single_nic_new_vnet_new_subnets" {
+  value = module.azure_multi_node_single_nic_new_vnet_new_subnets.vnet
 }
-
-/*module "azure_multi_node_single_nic_existing_vnet" {
-  source                         = "./modules/f5xc/site/azure"
-  f5xc_namespace                 = var.f5xc_namespace
-  f5xc_tenant                    = var.f5xc_tenant
-  f5xc_azure_cred                = var.f5xc_azure_cred
-  f5xc_azure_region              = var.f5xc_azure_region
-  f5xc_azure_site_name           = format("%s-mn-snic-exists-vnet-%s", var.project_prefix, var.project_suffix)
-  f5xc_azure_vnet_resource_group = format("%s-mn-snic-exists-vnet-rg-%s", var.project_prefix, var.project_suffix)
-  f5xc_azure_ce_gw_type          = "single_nic"
-  f5xc_azure_az_nodes            = {
-    node0 : { f5xc_azure_az = "1", f5xc_azure_local_subnet_name = "node0_subnetA" },
-    node1 : { f5xc_azure_az = "1", f5xc_azure_local_subnet_name = "node1_subnetB" },
-    node2 : { f5xc_azure_az = "1", f5xc_azure_local_subnet_name = "node2_subnetC" }
-  }
-  f5xc_azure_default_blocked_services = false
-  f5xc_azure_default_ce_sw_version    = true
-  f5xc_azure_default_ce_os_version    = true
-  f5xc_azure_no_worker_nodes          = true
-  f5xc_azure_total_worker_nodes       = 0
-  public_ssh_key                      = file(var.ssh_public_key_file)
-  providers = {
-    volterra = volterra.default
-  }
-}
-
-module "azure_multi_node_single_nic_existing_vnet_wait_for_online" {
-  depends_on     = [module.azure_multi_node_single_nic_existing_vnet]
-  source         = "./modules/f5xc/status/site"
-  f5xc_api_token = var.f5xc_api_token
-  f5xc_api_url   = var.f5xc_api_url
-  f5xc_namespace = var.f5xc_namespace
-  f5xc_tenant    = var.f5xc_tenant
-  f5xc_site_name = format("%s-mn-snic-exists-vnet-%s", var.project_prefix, var.project_suffix)
-}*/
-
-/*module "azure_multi_node_multi_nic_existing_vnet" {
-  source                       = "./modules/f5xc/site/azure"
-  f5xc_namespace               = var.f5xc_namespace
-  f5xc_tenant                  = var.f5xc_tenant
-  f5xc_azure_cred              = var.f5xc_azure_cred
-  f5xc_azure_region            = var.f5xc_azure_region
-  f5xc_azure_site_name         = format("%s-mn-mnic-exists-vnet-%s", var.project_prefix, var.project_suffix)
-  f5xc_azure_vnet_resource_group      = "vnet_resource_group_A"
-  f5xc_azure_ce_gw_type        = "multi_nic"
-  f5xc_azure_az_nodes          = {
-    node0 : {
-      f5xc_azure_az                       = "1", f5xc_azure_vnet_inside_subnet_name = "node_0_inside_subnet",
-      f5xc_azure_vnet_outside_subnet_name = "node_0_outside_subnet"
-    },
-    node1 : {
-      f5xc_azure_az                       = "1", f5xc_azure_vnet_inside_subnet_name = "node_1_inside_subnet",
-      f5xc_azure_vnet_outside_subnet_name = "node_1_outside_subnet"
-    },
-    node2 : {
-      f5xc_azure_az                       = "1", f5xc_azure_vnet_inside_subnet_name = "node_2_inside_subnet",
-      f5xc_azure_vnet_outside_subnet_name = "node_2_outside_subnet"
-    }
-  }
-  f5xc_azure_default_blocked_services = false
-  f5xc_azure_default_ce_sw_version    = true
-  f5xc_azure_default_ce_os_version    = true
-  f5xc_azure_no_worker_nodes          = true
-  f5xc_azure_total_worker_nodes       = 2
-  public_ssh_key                      = file(var.ssh_public_key_file)
-  providers = {
-    volterra = volterra.default
-  }
-}
-
-module "azure_multi_node_multi_nic_existing_vnet" {
-  depends_on     = [module.azure_multi_node_multi_nic_existing_vnet]
-  source         = "./modules/f5xc/status/site"
-  f5xc_api_token = var.f5xc_api_token
-  f5xc_api_url   = var.f5xc_api_url
-  f5xc_namespace = var.f5xc_namespace
-  f5xc_tenant    = var.f5xc_tenant
-  f5xc_site_name = format("%s-mn-mnic-exists-vnet-%s", var.project_prefix, var.project_suffix)
-}*/
