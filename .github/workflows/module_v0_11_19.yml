@@ -171,7 +171,7 @@ jobs:
           TF_VAR_ssh_private_key_file: ${{ secrets.SSH_PRIVATE_KEY_FILE }}
           TF_VAR_ssh_public_key_file: ${{ secrets.SSH_PUBLIC_KEY_FILE }}
         run: |
-          terraform import module.f5xc_azure_marketplace_agreement_multi_nic.azurerm_marketplace_agreement.f5xc_azure_ce /subscriptions/ ${{ secrets.AZURE_SUBSCRIPTION_ID }}/providers/Microsoft.MarketplaceOrdering/agreements/volterraedgeservices/offers/entcloud_voltmesh_voltstack_node/plans/freeplan_entcloud_voltmesh_voltstack_node_multinic
+          terraform import module.f5xc_azure_marketplace_agreement_multi_nic.azurerm_marketplace_agreement.f5xc_azure_ce /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/providers/Microsoft.MarketplaceOrdering/agreements/volterraedgeservices/offers/entcloud_voltmesh_voltstack_node/plans/freeplan_entcloud_voltmesh_voltstack_node_multinic
           terraform apply -auto-approve -no-color
         continue-on-error: false
       - name: List files in the modules repository
