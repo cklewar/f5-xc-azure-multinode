@@ -126,7 +126,7 @@ provider "volterra" {
 }*/
 
 module "azure_multi_node_single_nic_new_vnet_new_subnets" {
-  depends_on                          = [module.f5xc_azure_marketplace_agreement_multi_nic]
+  # depends_on                          = [module.f5xc_azure_marketplace_agreement_multi_nic]
   source                              = "./modules/f5xc/site/azure"
   f5xc_api_url                        = var.f5xc_api_url
   f5xc_api_token                      = var.f5xc_api_token
