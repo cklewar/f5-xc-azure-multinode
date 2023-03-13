@@ -174,10 +174,6 @@ jobs:
           terraform import module.f5xc_azure_marketplace_agreement_multi_nic.azurerm_marketplace_agreement.f5xc_azure_ce /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/providers/Microsoft.MarketplaceOrdering/agreements/volterraedgeservices/offers/entcloud_voltmesh_voltstack_node/plans/freeplan_entcloud_voltmesh_voltstack_node_multinic
           terraform apply -auto-approve -no-color
         continue-on-error: false
-      - name: List files in the modules repository
-        id: list_state_file
-        env:
-          TF_TOKEN_app_terraform_io: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
       - name: Cleanup environment
         id: cleanup_env
         run: |
@@ -216,17 +212,6 @@ jobs:
         env:
           TF_TOKEN_app_terraform_io: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
         run: terraform init -upgrade
-      - name: Get API Credential Name
-        id: get_api_credential_name
-        env:
-          TF_TOKEN_app_terraform_io: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
-        run: |
-          echo "api_credential_name=$(terraform output -json | jq -r '.response_api_certificate.value.name')" >> $GITHUB_ENV
-          ls -la ${{ github.workspace }}/modules/f5xc/api-credential/_out/${{ env.api_credential_name }}
-      - name: List files in the repository
-        run: |
-          ls -la ${{ github.workspace }}
-          echo ${{ env.api_credential_name }}
       - name: List files in the cert repository
         run: |
           ls -la ${{ github.workspace }}/f5-xc-cert
