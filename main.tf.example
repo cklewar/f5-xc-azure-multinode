@@ -61,6 +61,15 @@ variable "ssh_public_key_file" {
   type    = string
 }
 
+variable "custom_tags" {
+  type    = map(string)
+  default = {
+    Owner                  = "c.klewar@f5.com"
+    f5xc-feature           = "azure-vnet-multinode"
+    f5xc-ves-io-creator-id = "c.klewar@f5.com"
+  }
+}
+
 provider "azurerm" {
   client_id       = var.azure_client_id
   client_secret   = var.azure_client_secret
