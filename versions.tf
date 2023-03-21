@@ -8,19 +8,17 @@ terraform {
       name = "f5-xc-azure-vnet-multinode"
     }
   }
-
+  
   required_providers {
     volterra = {
-      source  = "volterraedge/volterra"
-      version = ">= 0.11.14"
+      source = "volterraedge/volterra"
+      version = "= 0.11.20"
     }
-
     azurerm = {
       source = "hashicorp/azurerm"
       version = ">= 3.25.0"
     }
-
     local = ">= 2.2.3"
-    null  = ">= 3.1.1"
+    null = ">= 3.1.1"
   }
 }
